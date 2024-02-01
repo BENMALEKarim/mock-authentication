@@ -19,9 +19,9 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }} .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}-$(basename ${{ github.ref }}) .
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}-$(basename ${{ github.ref }})
 
     - name: Set application name
       id: set_app_name
