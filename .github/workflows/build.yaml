@@ -40,7 +40,7 @@ jobs:
 
     - name: Update Helm values file
       run: |
-        yq e -i ".image.tag = \"${{ env.GITHUB_SHORT_SHA }}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
+        yq e -i ".image.tag = \"${{ env.GITHUB_SHORT_SHA }}-$(basename ${{ github.ref }})\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
 
     - name: Commit and push changes
       run: |
