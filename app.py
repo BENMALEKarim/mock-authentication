@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Hello Karim BENMALEK:  This is new version of ' + os.environ.get('APP_NAME') + ' application in ' + os.environ.get('ENVIRONMENT') + ' environment. Current verions is ' + os.environ.get('VERSION') + ' !'
+    return 'Hello Karim BENMALEK and CoP DevOps:  This is new version of ' + os.environ.get('APP_NAME') + ' application in ' + os.environ.get('ENVIRONMENT') + ' environment. Current verions is ' + os.environ.get('VERSION') + ' !'
 
 #app.run(host=os.environ.get("HOST"), port=os.environ.get("PORT"))
 port = int(os.environ.get('PORT', 5000))
