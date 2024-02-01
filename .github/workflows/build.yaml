@@ -14,10 +14,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set short SHA
-      run: echo "short_sha=${{ github.sha:0:8 }}" >> $GITHUB_ENV
+      id: set_short_sha
+      run: echo "GITHUB_SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${short_sha} .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }} .
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${short_sha}
+        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}
