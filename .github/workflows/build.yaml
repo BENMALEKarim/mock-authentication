@@ -22,3 +22,24 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }} .
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}
+
+    - name: Set application name
+      id: set_app_name
+      run: echo "APP_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
+
+    - name: Clone my helm repository
+      run: |
+        git clone https://github.com/BENMALEKarim/argocd-helm.git 
+
+    - name: Update Helm values file
+      run: |
+        docker run --rm -v "$(pwd):/workdir" mikefarah/yq:4 yq e -i ".image.tag = \"${{ env.GITHUB_SHORT_SHA }}\"" /workdir/argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
+
+    - name: Commit and push changes
+      run: |
+        cd argocd-helm
+        git config user.email "actions@github.com"
+        git config user.name "GitHub Actions"
+        git add .
+        git commit -m "Update image.tag for mock-authentication application in dev environment"
+        git push origin main
