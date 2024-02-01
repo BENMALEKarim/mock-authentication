@@ -45,8 +45,8 @@ jobs:
     - name: Commit and push changes
       run: |
         cd argocd-helm
-        git config user.email "actions@github.com"
-        git config user.name "GitHub Actions"
+        git config user.email ${{ secrets.REPOSITORY_EMAIL }}
+        git config user.name ${{ secrets.REPOSITORY_USER }}
         git add .
         git commit -m "Update image.tag for mock-authentication application in dev environment"
-        git push origin main
+        git push origin main https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
