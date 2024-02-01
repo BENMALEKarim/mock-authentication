@@ -2,11 +2,14 @@ name: Create Tag on PR Merge
 
 on:
   pull_request:
+    branches: 
+      - main
     types:
       - closed
 
 jobs:
   create-tag:
+    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
 
     steps:
@@ -20,20 +23,19 @@ jobs:
 
     - name: Check if PR is merged to develop
       run: |
-        if [ $(basename ${{ github.ref }}) == "main" ]; then
           echo "PR merged into main branch"
           echo "Creating Git tag..."
-          git tag -a "${RELEASE_VERSION}" -m "Version created by GitHub Actions"
-          git push origin "${RELEASE_VERSION}"
+          git tag -a v2.0.0 -m "Version created by GitHub Actions"
+          git push origin v2.0.0
         else
           echo "PR not merged into develop branch, skipping tag creation."
         fi
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${RELEASE_VERSION} .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:v2.0.0 .
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${RELEASE_VERSION}
+        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:v2.0.0
 
     - name: Set application name
       id: set_app_name
@@ -52,9 +54,9 @@ jobs:
 
     - name: Update Helm values file
       run: |
-        yq e -i ".image.tag = \"${RELEASE_VERSION}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
-        yq e -i ".image.tag = \"${RELEASE_VERSION}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/stagging-values.yaml
-        yq e -i ".image.tag = \"${RELEASE_VERSION}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/prod-values.yaml
+        yq e -i ".image.tag = \"v2.0.0\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
+        yq e -i ".image.tag = \"v2.0.0\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/stagging-values.yaml
+        yq e -i ".image.tag = \"v2.0.0\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/prod-values.yaml
 
     - name: Commit and push changes
       run: |
