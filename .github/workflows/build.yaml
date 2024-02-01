@@ -45,6 +45,7 @@ jobs:
     - name: Commit and push changes
       run: |
         cd argocd-helm
+        rm -rf argocd/
         git config user.email ${{ secrets.REPOSITORY_EMAIL }}
         git config user.name ${{ secrets.REPOSITORY_USER }}
         git add .
