@@ -1,0 +1,67 @@
+name: Create Tag on PR Merge
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v2
+
+    - name: Set up Git credentials
+      run: |
+        git config user.email ${{ secrets.REPOSITORY_EMAIL }}
+        git config user.name ${{ secrets.REPOSITORY_USER }}
+
+    - name: Check if PR is merged to develop
+      run: |
+        if [ $(basename ${{ github.ref }}) == "main" ]; then
+          echo "PR merged into main branch"
+          echo "Creating Git tag..."
+          git tag -a "${RELEASE_VERSION}" -m "Version created by GitHub Actions"
+          git push origin "${RELEASE_VERSION}"
+        else
+          echo "PR not merged into develop branch, skipping tag creation."
+        fi
+
+    - name: Build Docker image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${RELEASE_VERSION} .
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${RELEASE_VERSION}
+
+    - name: Set application name
+      id: set_app_name
+      run: |
+        echo "APP_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
+        echo ${{ env.APP_NAME }}
+
+    - name: Clone my helm repository
+      run: |
+        git clone https://github.com/BENMALEKarim/argocd-helm.git
+
+    - name: Install yq
+      run: |
+        wget https://github.com/mikefarah/yq/releases/download/v4.40.1/yq_linux_amd64 -O /usr/local/bin/yq
+        chmod +x /usr/local/bin/yq
+
+    - name: Update Helm values file
+      run: |
+        yq e -i ".image.tag = \"${RELEASE_VERSION}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
+        yq e -i ".image.tag = \"${RELEASE_VERSION}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/stagging-values.yaml
+        yq e -i ".image.tag = \"${RELEASE_VERSION}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/prod-values.yaml
+
+    - name: Commit and push changes
+      run: |
+        cd argocd-helm
+        rm -rf argocd/
+        git config user.email ${{ secrets.REPOSITORY_EMAIL }}
+        git config user.name ${{ secrets.REPOSITORY_USER }}
+        git add .
+        git commit -m "Update image.tag for mock-authentication application in prod environment"
+        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
