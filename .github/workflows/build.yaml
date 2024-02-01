@@ -25,7 +25,9 @@ jobs:
 
     - name: Set application name
       id: set_app_name
-      run: echo "APP_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
+      run: |
+        echo "APP_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
+        echo ${{ env.APP_NAME }}
 
     - name: Clone my helm repository
       run: |
