@@ -59,14 +59,10 @@ jobs:
       run: |
         git clone https://github.com/BENMALEKarim/argocd-helm.git
 
-    - name: Install yq
-      run: |
-        wget https://github.com/mikefarah/yq/releases/download/v4.40.1/yq_linux_amd64 -O /usr/local/bin/yq
-        chmod +x /usr/local/bin/yq
-
     - name: Update Helm values file
-      run: |
-        yq e -i ".image.tag = \"${{ env.IMAGE_TAG }}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq e -i ".image.tag = \"${{ env.IMAGE_TAG }}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
 
     - name: Commit and push changes
       run: |

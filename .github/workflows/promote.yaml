@@ -16,7 +16,23 @@ jobs:
     env:
       HIGH_ENV: ${{ inputs.higher_environment }}
       LOW_ENV: ${{ inputs.lower_environment }}
-    steps:
-    - name: promote
+      APP_NAME: $(basename ${{ github.repository }})
+    steps:  
+    - name: Clone my Helm repository
       run: |
-        echo "Promote from $LOW_ENV to $HIGH_ENV"
+        git clone https://github.com/BENMALEKarim/argocd-helm.git
+
+    - name: Update Helm values file
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq eval ".image.tag = \"$(yq eval '.image.tag' apps/${{ env.APP_NAME }}/environments/${{ env.LOW_ENV }}-values.yaml)' " -i apps/${{ env.APP_NAME }}/environments/${{ env.HIGH_ENV }}-values.yaml
+
+    - name: Commit and push changes
+      run: |
+        cd argocd-helm
+        rm -rf argocd/
+        git config user.email ${{ secrets.REPOSITORY_EMAIL }}
+        git config user.name ${{ secrets.REPOSITORY_USER }}
+        git add .
+        git commit -m "Promote new version to ${{ env.HIGH_ENV }} environment"
+        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
