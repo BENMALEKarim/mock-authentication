@@ -22,10 +22,15 @@ jobs:
       run: |
         git clone https://github.com/BENMALEKarim/argocd-helm.git
 
+    - name: Get Image Tag
+      uses: mikefarah/yq@master
+      with:
+        cmd: echo "IMAGE_TAG=$(yq eval '.image.tag' 'argocd-helm/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')" >> $GITHUB_ENV
+
     - name: Update Helm values file
       uses: mikefarah/yq@master
       with:
-        cmd: yq eval '.image.tag = "$(yq eval '.image.tag' 'argocd-helm/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')"' -i "argocd-helm/apps/mock-authentication/environments/${{ env.HIGH_ENV }}-values.yaml"
+        cmd: yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/${{ env.HIGH_ENV }}-values.yaml"
 
     - name: Commit and push changes
       run: |
