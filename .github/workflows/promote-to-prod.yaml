@@ -68,9 +68,9 @@ jobs:
       uses: mikefarah/yq@master
       with:
         cmd: |
-          yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/dev-values.yaml" &&
-          yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/stagging-values.yaml" &&
-          yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/prod-values.yaml"
+          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/dev-values.yaml" &&
+          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/stagging-values.yaml" &&
+          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/prod-values.yaml"
 
     - name: Commit and push changes
       run: |
