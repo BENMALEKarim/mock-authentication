@@ -3,10 +3,15 @@ name: Build and Update New feature into DEV environment
 on:
   push:
     branches:
-      - 'feature/*'
+      - 'develop'
 
 jobs:
-  build:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "building and testing the app ..."
+  
+  docker-build-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,13 +28,18 @@ jobs:
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}-$(basename ${{ github.ref }})
 
+  update-helm-image-tag:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Set application name
       id: set_app_name
       run: |
         echo "APP_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
         echo ${{ env.APP_NAME }}
 
-    - name: Clone my helm repository
+    - name: Clone my Helm repository
       run: |
         git clone https://github.com/BENMALEKarim/argocd-helm.git
 
