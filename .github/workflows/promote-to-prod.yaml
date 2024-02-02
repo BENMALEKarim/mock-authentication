@@ -79,7 +79,7 @@ jobs:
         git config user.email ${{ secrets.REPOSITORY_EMAIL }}
         git config user.name ${{ secrets.REPOSITORY_USER }}
         git add .
-        git commit -m "New Release my friend"
+        git commit -m "New Release ${{ env.RELEASE_TAG }} delivered"
         git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
 
     
