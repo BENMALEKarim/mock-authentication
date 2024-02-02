@@ -18,7 +18,8 @@ jobs:
         run: |
           git config user.email ${{ secrets.REPOSITORY_EMAIL }}
           git config user.name ${{ secrets.REPOSITORY_USER }}
-          git tag -a {{ env.TAG }} -m "New Tag: {{ env.TAG }} "
+          git tag {{ env.TAG }}
+          git push origin {{ env.TAG }}
   
   get-image-tag:
     runs-on: ubuntu-latest
