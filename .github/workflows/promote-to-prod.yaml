@@ -20,7 +20,7 @@ jobs:
       uses: mikefarah/yq@master
       id: get_image_tag
       with:
-        cmd: echo "IMAGE_TAG=$(yq eval '.image.tag' 'argocd-helm/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')" >> $GITHUB_OUTPUT
+        cmd: echo "IMAGE_TAG=$(yq eval '.image.tag' 'BENMALEKarim/argocd-helm/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')" >> $GITHUB_OUTPUT
 
     outputs:
       IMAGE_TAG: ${{ steps.get_image_tag.outputs.IMAGE_TAG }}
