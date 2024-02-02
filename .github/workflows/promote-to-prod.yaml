@@ -17,10 +17,10 @@ jobs:
 
     - name: Git Tag and Publish
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git config user.name "${{ secrets.GIT_USER_NAME }}"
         git tag -a "${{ env.RELEASE_TAG }}" -m "Release ${{ env.RELEASE_TAG }} version"
-        git push origin "${{ env.RELEASE_TAG }}"
+        git push origin "${{ env.RELEASE_TAG }}" https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/mock-authentication.git
 
   get-image-tag:
     needs: create-release-tag
