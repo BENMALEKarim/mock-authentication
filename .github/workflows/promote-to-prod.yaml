@@ -14,7 +14,8 @@ jobs:
       TAG: ${{ inputs.tag }}
     steps:
       - uses: actions/checkout@v4
-      - run: |
+      - name: Create git tag
+        run: |
           git config user.email ${{ secrets.REPOSITORY_EMAIL }}
           git config user.name ${{ secrets.REPOSITORY_USER }}
           git tag -a {{ env.TAG }} -m "New Tag: {{ env.TAG }} "
