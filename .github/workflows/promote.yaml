@@ -25,7 +25,7 @@ jobs:
     - name: Update Helm values file
       uses: mikefarah/yq@master
       with:
-        cmd: yq eval ".image.tag = \"$(yq eval '.image.tag' 'apps/${{ env.APP_NAME }}/environments/${{ env.LOW_ENV }}-values.yaml')\"" -i "apps/${{ env.APP_NAME }}/environments/${{ env.HIGH_ENV }}-values.yaml"
+        cmd: yq eval ".image.tag = \"$(yq eval '.image.tag' 'argocd-helm/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')\"" -i "argocd-helm/apps/mock-authentication/environments/${{ env.HIGH_ENV }}-values.yaml"
 
     - name: Commit and push changes
       run: |
