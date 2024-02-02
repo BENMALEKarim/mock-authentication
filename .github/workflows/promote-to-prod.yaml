@@ -14,7 +14,7 @@ jobs:
     - name: Checkout my Helm repository
       uses: actions/checkout@v4
       with:
-        repository: BENMALEKarim/argocd-helm.git
+        repository: BENMALEKarim/argocd-helm
 
     - name: Get Image Tag
       uses: mikefarah/yq@master
