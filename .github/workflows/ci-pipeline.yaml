@@ -62,7 +62,7 @@ jobs:
     - name: Update Helm values file
       uses: mikefarah/yq@master
       with:
-        cmd: yq e -i ".image.tag = \"${{ env.IMAGE_TAG }}\"" argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
+        cmd: yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
 
     - name: Commit and push changes
       run: |
