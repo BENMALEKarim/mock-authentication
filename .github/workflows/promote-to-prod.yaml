@@ -55,7 +55,6 @@ jobs:
 
   update-helm-deployment:
     needs: docker-tag-push
-    needs: get-image-tag
     runs-on: ubuntu-latest
     env:
       RELEASE_TAG: ${{needs.docker-tag-push.outputs.RELEASE_TAG}}
