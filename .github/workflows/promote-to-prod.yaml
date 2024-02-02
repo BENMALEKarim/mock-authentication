@@ -61,10 +61,8 @@ jobs:
 
     steps:
     - name: Checkout my Helm repository
-      uses: actions/checkout@v4
-      with:
-        repository: BENMALEKarim/argocd-helm
-        path: argocd-helm
+      run: |
+        git clone https://github.com/BENMALEKarim/argocd-helm.git
     
     - name: Update Helm values file
       uses: mikefarah/yq@master
