@@ -14,15 +14,10 @@ jobs:
       TAG: ${{ inputs.tag }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: rickstaa/action-create-tag@v1
-        id: "tag_create"
-        with:
-          tag: ${{ env.TAG }}
-          tag_exists_error: false
-          message: "${{ env.TAG }} release"
-          github_token: ${{ secrets.REPOSITORY_TOKEN }}
+      - run: |
+          git config user.email ${{ secrets.REPOSITORY_EMAIL }}
+          git config user.name ${{ secrets.REPOSITORY_USER }}
+          git tag -a {{ env.TAG }} -m "New Tag: {{ env.TAG }} "
   
   get-image-tag:
     runs-on: ubuntu-latest
