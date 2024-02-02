@@ -17,17 +17,23 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set short SHA
       id: set_short_sha
       run: echo "GITHUB_SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
 
-    - name: Build Docker image
-      run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}-$(basename ${{ github.ref }}) .
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}-$(basename ${{ github.ref }})
+    - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}-$(basename ${{ github.ref }})
 
   update-helm-image-tag:
     needs: docker-build-push
