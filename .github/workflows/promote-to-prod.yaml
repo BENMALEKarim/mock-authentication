@@ -34,9 +34,10 @@ jobs:
 
     steps:
     - name: Set git tag
-      id: set_git_tag
+      id: set_release_tag
       run: |
         echo "RELEASE_TAG=$(basename ${{ github.ref }})" >> $GITHUB_ENV
+        echo "RELEASE_TAG=$(basename ${{ github.ref }})" >> $GITHUB_OUTPUT
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
@@ -48,3 +49,40 @@ jobs:
         docker pull ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.IMAGE_TAG }}
         docker tag ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.IMAGE_TAG }} ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.RELEASE_TAG }}
         docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.RELEASE_TAG }}
+    
+    outputs:
+      RELEASE_TAG: ${{ steps.set_release_tag.outputs.IMAGE_TAG }}
+
+  update-helm-deployment:
+    needs: docker-tag-push
+    needs: get-image-tag
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{needs.docker-tag-push.outputs.RELEASE_TAG}}
+
+    steps:
+    - name: Checkout my Helm repository
+      uses: actions/checkout@v4
+      with:
+        repository: BENMALEKarim/argocd-helm
+        path: argocd-helm
+    
+    - name: Update Helm values file
+      uses: mikefarah/yq@master
+      with:
+        cmd: |
+          yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/dev-values.yaml" &&
+          yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/stagging-values.yaml" &&
+          yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/prod-values.yaml"
+
+    - name: Commit and push changes
+      run: |
+        cd argocd-helm
+        rm -rf argocd/
+        git config user.email ${{ secrets.REPOSITORY_EMAIL }}
+        git config user.name ${{ secrets.REPOSITORY_USER }}
+        git add .
+        git commit -m "New Release my friend"
+        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
+
+    
