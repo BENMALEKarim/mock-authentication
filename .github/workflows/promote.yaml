@@ -8,6 +8,9 @@ inputs:
     description: higher environment
     required: true
 
+on:
+  workflow_dispatch:
+
 jobs:
   promote:
     runs-on: ubuntu-latest
