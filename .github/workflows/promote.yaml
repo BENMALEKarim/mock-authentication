@@ -1,0 +1,20 @@
+name: Promote image
+
+inputs:
+  lower_environment:
+    description: lower environment
+    required: true
+  higher_environment:
+    description: higher environment
+    required: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    env:
+      HIGH_ENV: ${{ inputs.higher_environment }}
+      LOW_ENV: ${{ inputs.lower_environment }}
+    steps:
+    - name: promote
+      run: |
+        echo "Promote from $LOW_ENV to $HIGH_ENV"
