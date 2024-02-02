@@ -13,14 +13,18 @@ jobs:
     env:
       TAG: ${{ inputs.tag }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Create git tag
-        run: |
-          git config user.email ${{ secrets.REPOSITORY_EMAIL }}
-          git config user.name ${{ secrets.REPOSITORY_USER }}
-          git tag {{ env.TAG }}
-          git push origin {{ env.TAG }}
-  
+    - uses: actions/checkout@v4
+
+    - name: Set Git Config
+      run: |
+        git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git config user.name "${{ secrets.GIT_USER_NAME }}"
+
+    - name: Create and Push Git Tag
+      run: |
+        git tag "${{ env.TAG }}"
+        git push origin "${{ env.TAG }}"
+        
   get-image-tag:
     runs-on: ubuntu-latest
     needs: create-git-tag
