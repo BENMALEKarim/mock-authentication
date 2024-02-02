@@ -22,6 +22,7 @@ jobs:
           tag: ${{ env.TAG }}
           tag_exists_error: false
           message: "${{ env.TAG }} release"
+          github_token: ${{ secrets.REPOSITORY_TOKEN }}
   
   get-image-tag:
     runs-on: ubuntu-latest
