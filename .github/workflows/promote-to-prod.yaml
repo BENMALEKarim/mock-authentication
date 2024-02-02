@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set Git Config
+    - name: Git Tag and Publish
       run: |
         git config user.email "${{ secrets.GIT_USER_EMAIL }}"
         git config user.name "${{ secrets.GIT_USER_NAME }}"
