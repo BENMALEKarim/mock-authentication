@@ -21,6 +21,5 @@ jobs:
 
     - name: Docker Pull/Tag/Push
       run: |
-        docker pull ${{ secrets.DOCKER_USERNAME }}/mock-authentication:{{ env.IMAGE_TAG }}
-        docker tag ${{ secrets.DOCKER_USERNAME }}/mock-authentication:{{ env.IMAGE_TAG }} ${{ secrets.DOCKER_USERNAME }}/mock-authentication:{{ env.TAG }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:{{ env.TAG }}
+        echo ${{ env.IMAGE_TAG }}
+        echo ${{ env.TAG }}
