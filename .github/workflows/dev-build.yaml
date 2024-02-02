@@ -12,6 +12,7 @@ jobs:
       - run: echo "building and testing the app ..."
   
   docker-build-push:
+    needs: build-test
     runs-on: ubuntu-latest
 
     steps:
