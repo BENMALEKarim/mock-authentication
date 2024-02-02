@@ -1,15 +1,14 @@
-name: Promote image
-
-inputs:
-  lower_environment:
-    description: lower environment
-    required: true
-  higher_environment:
-    description: higher environment
-    required: true
+name: Promote Image
 
 on:
   workflow_dispatch:
+    inputs:
+      lower_environment:
+        description: lower environment
+        required: true
+      higher_environment:
+        description: higher environment
+        required: true
 
 jobs:
   promote:
