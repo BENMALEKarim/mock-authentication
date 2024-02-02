@@ -50,12 +50,11 @@ jobs:
   update-helm-image-tag:
     needs: docker-build-push
     runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{needs.docker-build-push.outputs.IMAGE_TAG}}
+      APP_NAME: ${{needs.docker-build-push.outputs.APP_NAME}}
 
-    steps:
-    - env:
-        IMAGE_TAG: ${{needs.docker-build-push.outputs.IMAGE_TAG}}
-        APP_NAME: ${{needs.docker-build-push.outputs.APP_NAME}}
-    
+    steps:  
     - name: Clone my Helm repository
       run: |
         git clone https://github.com/BENMALEKarim/argocd-helm.git
