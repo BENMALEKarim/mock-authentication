@@ -29,7 +29,7 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.GITHUB_SHORT_SHA }}-$(basename ${{ github.ref }})
 
   update-helm-image-tag:
-    needs: build
+    needs: docker-build-push
     runs-on: ubuntu-latest
 
     steps:
