@@ -51,7 +51,7 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/mock-authentication:${{ env.RELEASE_TAG }}
     
     outputs:
-      RELEASE_TAG: ${{ steps.set_release_tag.outputs.IMAGE_TAG }}
+      RELEASE_TAG: ${{ steps.set_release_tag.outputs.RELEASE_TAG }}
 
   update-helm-deployment:
     needs: docker-tag-push
