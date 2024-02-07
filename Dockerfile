@@ -1,6 +1,7 @@
 FROM python:3.11-slim 
 
-RUN pip3 install flask
+RUN apt-get -y update && apt-get -y upgrade \
+    && pip3 install flask
 
 RUN mkdir /app 
 
