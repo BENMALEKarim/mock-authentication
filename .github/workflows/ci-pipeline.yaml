@@ -8,6 +8,7 @@ on:
       - '.github/**'
       - '**/README.md'
       - '**/.gitignore'
+      - 'Discussions/**'
 
 jobs:
   build-test:
