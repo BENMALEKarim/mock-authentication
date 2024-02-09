@@ -39,5 +39,5 @@ jobs:
         git config user.email ${{ secrets.REPOSITORY_EMAIL }}
         git config user.name ${{ secrets.REPOSITORY_USER }}
         git add .
-        git commit -m "Promote new version to ${{ env.HIGH_ENV }} environment"
+        git commit -m "Promote new version to ${{ env.HIGH_ENV }} environment from ${{ env.LOW_ENV }}"
         git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
