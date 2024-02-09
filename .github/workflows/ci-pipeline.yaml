@@ -6,7 +6,8 @@ on:
       - 'main'
     paths-ignore:
       - '.github/**'
-      - 'README.md'
+      - '**/README.md'
+      - '**/.gitignore'
 
 jobs:
   build-test:
