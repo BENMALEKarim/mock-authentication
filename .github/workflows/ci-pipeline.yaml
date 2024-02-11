@@ -62,18 +62,18 @@ jobs:
     steps:  
     - name: Clone my Helm repository
       run: |
-        git clone https://github.com/BENMALEKarim/argocd-helm.git
+        git clone https://github.com/BENMALEKarim/helm-charts.git
 
     - name: Update Helm values file
       uses: mikefarah/yq@master
       with:
-        cmd: yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i argocd-helm/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
+        cmd: yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i helm-charts/apps/${{ env.APP_NAME }}/environments/dev-values.yaml
 
     - name: Commit and push changes
       run: |
-        cd argocd-helm
+        cd helm-charts
         git config user.email ${{ secrets.REPOSITORY_EMAIL }}
         git config user.name ${{ secrets.REPOSITORY_USER }}
         git add .
         git commit -m "Update image.tag for mock-authentication application in dev environment ${{ env.IMAGE_TAG }}"
-        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
+        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/helm-charts.git

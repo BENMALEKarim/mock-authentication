@@ -20,23 +20,23 @@ jobs:
     steps:  
     - name: Clone my Helm repository
       run: |
-        git clone https://github.com/BENMALEKarim/argocd-helm.git
+        git clone https://github.com/BENMALEKarim/helm-charts.git
 
     - name: Get Image Tag
       uses: mikefarah/yq@master
       with:
-        cmd: echo "IMAGE_TAG=$(yq eval '.image.tag' 'argocd-helm/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')" >> $GITHUB_ENV
+        cmd: echo "IMAGE_TAG=$(yq eval '.image.tag' 'helm-charts/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')" >> $GITHUB_ENV
 
     - name: Update Helm values file
       uses: mikefarah/yq@master
       with:
-        cmd: yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/${{ env.HIGH_ENV }}-values.yaml"
+        cmd: yq eval '.image.tag = "${{ env.IMAGE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/${{ env.HIGH_ENV }}-values.yaml"
 
     - name: Commit and push changes
       run: |
-        cd argocd-helm
+        cd helm-charts
         git config user.email ${{ secrets.REPOSITORY_EMAIL }}
         git config user.name ${{ secrets.REPOSITORY_USER }}
         git add .
         git commit -m "Promote new version to ${{ env.HIGH_ENV }} environment from ${{ env.LOW_ENV }}"
-        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
+        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/helm-charts.git

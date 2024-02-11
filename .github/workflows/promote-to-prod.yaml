@@ -14,14 +14,14 @@ jobs:
     - name: Checkout my Helm repository
       uses: actions/checkout@v4
       with:
-        repository: BENMALEKarim/argocd-helm
-        path: argocd-helm
+        repository: BENMALEKarim/helm-charts
+        path: helm-charts
 
     - name: Get Image Tag
       uses: mikefarah/yq@master
       id: get_image_tag
       with:
-        cmd: echo "IMAGE_TAG=$(yq eval '.image.tag' 'argocd-helm/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')" >> $GITHUB_OUTPUT
+        cmd: echo "IMAGE_TAG=$(yq eval '.image.tag' 'helm-charts/apps/mock-authentication/environments/${{ env.LOW_ENV }}-values.yaml')" >> $GITHUB_OUTPUT
 
     outputs:
       IMAGE_TAG: ${{ steps.get_image_tag.outputs.IMAGE_TAG }}
@@ -62,24 +62,23 @@ jobs:
     steps:
     - name: Checkout my Helm repository
       run: |
-        git clone https://github.com/BENMALEKarim/argocd-helm.git
+        git clone https://github.com/BENMALEKarim/helm-charts.git
     
     - name: Update Helm values file
       uses: mikefarah/yq@master
       with:
         cmd: |
-          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/dev-values.yaml" &&
-          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/stagging-values.yaml" &&
-          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "argocd-helm/apps/mock-authentication/environments/prod-values.yaml"
+          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/dev-values.yaml" &&
+          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/stagging-values.yaml" &&
+          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/prod-values.yaml"
 
     - name: Commit and push changes
       run: |
-        cd argocd-helm
-        rm -rf argocd/
+        cd helm-charts
         git config user.email ${{ secrets.REPOSITORY_EMAIL }}
         git config user.name ${{ secrets.REPOSITORY_USER }}
         git add .
         git commit -m "New Release ${{ env.RELEASE_TAG }} delivered"
-        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/argocd-helm.git
+        git push https://${{ secrets.REPOSITORY_TOKEN }}@github.com/BENMALEKarim/helm-charts.git
 
     
