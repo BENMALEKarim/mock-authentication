@@ -11,6 +11,10 @@ def welcome():
 def login():
     return ' Your token is: ' + os.environ.get('TOKEN')
 
+@app.route('/newFeature')
+def login():
+    return ' New Feature '
+
 
 port = int(os.environ.get('PORT', 5000))
 app.run(debug=True, host='0.0.0.0', port=port)
