@@ -12,7 +12,7 @@ def login():
     return ' Your token is: ' + os.environ.get('TOKEN')
 
 @app.route('/newFeature')
-def login():
+def feature():
     return ' New Feature '
 
 
