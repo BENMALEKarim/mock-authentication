@@ -71,6 +71,8 @@ jobs:
           yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/dev-values.yaml" &&
           yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/stagging-values.yaml" &&
           yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/prod-values.yaml"
+          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/pps-values.yaml"
+          yq eval '.image.tag = "${{ env.RELEASE_TAG }}"' -i "helm-charts/apps/mock-authentication/environments/reg-values.yaml"
 
     - name: Commit and push changes
       run: |
