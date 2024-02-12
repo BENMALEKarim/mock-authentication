@@ -9,7 +9,7 @@ def welcome():
 
 @app.route('/login')
 def login():
-    return ' Your token is: ' + os.environ.get('TOKEN')
+    return ' Your token is: ' + os.environ.get('TOKEN') '. You must secure the token !!!'
 
 
 port = int(os.environ.get('PORT', 5000))
