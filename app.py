@@ -13,7 +13,7 @@ def login():
 
 @app.route('/tfc')
 def feature():
-    return ' New Feature: Allez le Toulouse Football Club'
+    return 'Allez le Toulouse Football Club'
 
 
 port = int(os.environ.get('PORT', 5000))
