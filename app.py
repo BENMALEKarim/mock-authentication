@@ -11,9 +11,9 @@ def welcome():
 def login():
     return ' Your token is: ' + os.environ.get('TOKEN') + '. You must secure the token !!!'
 
-@app.route('/newFeature')
+@app.route('/tfc')
 def feature():
-    return ' New Feature with Himansu'
+    return ' New Feature: Allez le TFC'
 
 
 port = int(os.environ.get('PORT', 5000))
